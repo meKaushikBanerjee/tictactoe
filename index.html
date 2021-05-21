@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Kata-Kuti</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- Load 2 Javascript files -->
+	<script src="game.js"></script>
+	<script src="state.js"></script>
+
+	<!-- Add style to canvas object -->
+	<style>
+		canvas {
+			position: absolute;
+			margin: auto;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+		}
+	</style>
+		<!--<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-6971342-6']);
+	  _gaq.push(['_trackPageview']);
+	  _gaq.push(['_trackPageLoadTime']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>-->
+</head>
+<body>
+<script>
+
+var canvas, ctx, state, mouse = {x:0, y:0};
+
+window.onload = function main() {
+
+	canvas = document.createElement("canvas");
+	//set canvas size (width and height)
+	canvas.width = canvas.height = 3*120 + 20;
+	ctx = canvas.getContext("2d");
+
+	state = new StateManager();
+	// create main menu
+	state.add(new MenuState("menu"), new GameState("game"), new AboutState("about"));
+	state.set("menu");
+
+	document.body.appendChild(canvas);
+
+	canvas.addEventListener("mousemove", mouseMove, false);
+
+	init();
+	tick();
+}
+
+function init() {
+	state.get("game").init(ONE_PLAYER);
+}
+
+function tick() {
+	window.requestAnimationFrame(tick);
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	state.tick(ctx);
+}
+
+function mouseMove(evt) {
+	var el = evt.target;
+	var ox = oy = 0;
+	do {
+		ox += el.offsetLeft;
+		oy += el.offsetTop;
+	} while (el.parentOffset)
+
+	mouse.x = evt.clientX - ox;
+	mouse.y = evt.clientY - oy;
+}
+</script>
+</body>
+</html>
